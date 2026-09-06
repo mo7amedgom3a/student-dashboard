@@ -57,7 +57,7 @@ export function Logo({
   const maskId = useId().replace(/:/g, "");
 
   return (
-    <span className="inline-flex items-center gap-1.5 sm:gap-2 shrink-0">
+    <span className="inline-flex items-center gap-1 sm:gap-1.5 shrink-0">
       <svg
         viewBox="980 135 370 175"
         xmlns="http://www.w3.org/2000/svg"
@@ -96,7 +96,7 @@ export function Logo({
       {withLabel && (
         <span
           className={cn(
-            "hidden sm:inline text-sm sm:text-base font-bold tracking-tight text-shimmer",
+            "hidden sm:inline text-xs sm:text-[13px] font-bold tracking-tight text-shimmer leading-none",
             labelClassName,
           )}
         >
@@ -195,7 +195,7 @@ export function Header() {
           className="flex items-center shrink-0 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-0.5"
           aria-label="Mastery Academy home"
         >
-          <Logo className="h-6 sm:h-7 w-auto" withLabel animated />
+          <Logo className="h-5 sm:h-5.5 w-auto" withLabel animated />
         </button>
 
         {/* Desktop & Tablet Navigation (Adaptive to strictly avoid overflow) */}

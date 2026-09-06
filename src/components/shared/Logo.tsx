@@ -21,7 +21,7 @@ export function Logo({
   const maskId = useId().replace(/:/g, "");
 
   return (
-    <span className="inline-flex items-center gap-1.5 sm:gap-2 shrink-0">
+    <span className="inline-flex items-center gap-1 sm:gap-1.5 shrink-0">
       <svg
         viewBox="980 135 370 175"
         xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +60,7 @@ export function Logo({
       {withLabel && (
         <span
           className={cn(
-            "hidden sm:inline text-sm sm:text-base font-bold tracking-tight text-shimmer",
+            "hidden sm:inline text-xs sm:text-[13px] font-bold tracking-tight text-shimmer leading-none",
             labelClassName,
           )}
         >
