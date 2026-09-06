@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -34,8 +34,9 @@ import { StepProgressBar } from "@/components/shared/StepProgressBar";
 import { CourseCard } from "@/components/shared/CourseCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { cn } from "@/lib/utils";
+import { gsap } from "gsap";
 
 // ----- Static lookups -----
 
@@ -130,6 +131,10 @@ export function OnboardingScreen() {
   const completeOnboarding = useAppStore((s) => s.completeOnboarding);
   const user = useAppStore((s) => s.user);
 
+  const topBarRef = useRef<HTMLDivElement>(null);
+  const stepContentRef = useRef<HTMLDivElement>(null);
+  const prevStepRef = useRef<number>(step);
+
   // Shortened labels for the progress bar — locale-aware (kept inline since
   // i18n.ts is a protected foundation file).
   const stepLabels = useMemo(
@@ -165,6 +170,38 @@ export function OnboardingScreen() {
     const timer = window.setTimeout(() => setPlanReady(true), PLAN_LOADING_MS);
     return () => window.clearTimeout(timer);
   }, [step]);
+
+  const topBarPct = Math.min(100, Math.round(((step + 1) / TOTAL_STEPS) * 100));
+
+  // Top bar smooth GSAP progress animation when student completes current and clicks next/back
+  useEffect(() => {
+    const isForward = step > prevStepRef.current;
+    prevStepRef.current = step;
+
+    if (topBarRef.current) {
+      gsap.to(topBarRef.current, {
+        width: `${topBarPct}%`,
+        duration: 0.65,
+        ease: "power3.out",
+      });
+    }
+
+    if (stepContentRef.current) {
+      gsap.fromTo(
+        stepContentRef.current,
+        {
+          opacity: 0,
+          x: isRTL ? (isForward ? -20 : 20) : (isForward ? 20 : -20),
+        },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.35,
+          ease: "power2.out",
+        }
+      );
+    }
+  }, [step, topBarPct, isRTL]);
 
   // ----- Step validation -----
   const canProceed = useMemo(() => {
@@ -203,7 +240,26 @@ export function OnboardingScreen() {
   const BackIcon = isRTL ? ArrowRight : ArrowLeft;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-accent/40 via-background to-background">
+    <main className="relative min-h-screen bg-gradient-to-b from-accent/40 via-background to-background">
+      {/* Top viewport progress bar (fixed at top-0): smoothly glides across when student completes current & clicks next */}
+      <div
+        className="fixed top-0 inset-x-0 z-50 h-1.5 bg-muted/40 backdrop-blur-xs overflow-hidden"
+        role="progressbar"
+        aria-valuenow={topBarPct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Registration Progress"
+      >
+        <div
+          ref={topBarRef}
+          className="relative h-full bg-gradient-to-r from-primary via-primary/85 to-emerald-400 shadow-[0_0_12px_rgba(166,23,232,0.6)] transition-none"
+          style={{ width: `${topBarPct}%` }}
+        >
+          {/* Luminous glow pulse on leading edge */}
+          <span className="absolute end-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#ffffff] pointer-events-none" />
+        </div>
+      </div>
+
       <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
         {/* Header */}
         <header className="mb-8 flex flex-wrap items-start justify-between gap-3">
@@ -239,8 +295,8 @@ export function OnboardingScreen() {
           className="mb-8"
         />
 
-        {/* Step content — keyed by step so each transition replays slide-enter */}
-        <div key={step} className="slide-enter">
+        {/* Step content */}
+        <div ref={stepContentRef}>
           {step === 0 && (
             <IntentStep
               selected={answers.intent}
@@ -677,6 +733,48 @@ function EducationStep({
   );
 }
 
+function OnboardingCourseSkeleton() {
+  return (
+    <div className="rounded-lg border border-border bg-card p-3.5 sm:p-4 shadow-xs flex flex-col space-y-3">
+      {/* Thumbnail skeleton */}
+      <div className="w-full aspect-video rounded-md overflow-hidden bg-muted/40">
+        <Skeleton height="100%" className="block" />
+      </div>
+
+      {/* Category + Level pill skeletons */}
+      <div className="flex items-center gap-2">
+        <Skeleton width={75} height={18} borderRadius={999} />
+        <Skeleton width={55} height={18} borderRadius={999} />
+      </div>
+
+      {/* Course Title (2 lines) */}
+      <div className="space-y-1.5">
+        <Skeleton height={18} width="92%" />
+        <Skeleton height={18} width="66%" />
+      </div>
+
+      {/* Instructor avatar & name */}
+      <div className="flex items-center gap-2 pt-1">
+        <Skeleton circle width={22} height={22} />
+        <Skeleton width={115} height={14} />
+      </div>
+
+      {/* Rating & meta stats */}
+      <div className="flex items-center gap-3 pt-1">
+        <Skeleton width={45} height={14} />
+        <Skeleton width={60} height={14} />
+        <Skeleton width={55} height={14} />
+      </div>
+
+      {/* Price tag & action button */}
+      <div className="flex items-center justify-between pt-2.5 border-t border-border/50">
+        <Skeleton width={65} height={20} />
+        <Skeleton width={85} height={30} borderRadius={6} />
+      </div>
+    </div>
+  );
+}
+
 function CompletionStep({
   ready,
   roleId,
@@ -685,6 +783,7 @@ function CompletionStep({
   roleId?: string;
 }) {
   const { t, locale } = useI18n();
+  const cardsGridRef = useRef<HTMLDivElement>(null);
 
   const recommended = useMemo(() => {
     const role = roleId ? getRole(roleId) : undefined;
@@ -698,6 +797,24 @@ function CompletionStep({
       .sort((a, b) => b.enrolledCount - a.enrolledCount)
       .slice(0, 4);
   }, [roleId]);
+
+  // GSAP entrance animation for course cards when plan is ready
+  useEffect(() => {
+    if (ready && cardsGridRef.current) {
+      gsap.fromTo(
+        cardsGridRef.current.children,
+        { opacity: 0, y: 24, scale: 0.98 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.45,
+          stagger: 0.09,
+          ease: "power2.out",
+        }
+      );
+    }
+  }, [ready]);
 
   return (
     <section aria-label={t("onboarding.s5.title")} className="space-y-8">
@@ -717,33 +834,39 @@ function CompletionStep({
 
       {!ready ? (
         <div className="mx-auto max-w-3xl space-y-4">
-          <div className="flex items-center justify-center gap-1.5 py-2">
-            <span className="typing-dot h-2 w-2 rounded-full bg-primary/60" />
-            <span className="typing-dot h-2 w-2 rounded-full bg-primary/60" />
-            <span className="typing-dot h-2 w-2 rounded-full bg-primary/60" />
+          <div className="flex items-center justify-center gap-2 py-2 text-xs text-muted-foreground">
+            <span className="typing-dot h-2 w-2 rounded-full bg-primary" />
+            <span className="typing-dot h-2 w-2 rounded-full bg-primary" />
+            <span className="typing-dot h-2 w-2 rounded-full bg-primary" />
+            <span className="ms-1 font-medium text-foreground">
+              {locale === "ar"
+                ? "جاري تحليل مسارك وتجهيز الخطة التعليمية المخصصة..."
+                : "Analyzing your profile and curating personalized courses..."}
+            </span>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[0, 1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="rounded-lg border border-border bg-card p-3"
-              >
-                <Skeleton className="h-24 w-full rounded-md" />
-                <Skeleton className="mt-3 h-4 w-3/4" />
-                <Skeleton className="mt-2 h-3 w-1/2" />
-                <Skeleton className="mt-2 h-3 w-2/3" />
-              </div>
-            ))}
-          </div>
+
+          <SkeletonTheme
+            baseColor="var(--base-color, #e7e4e4)"
+            highlightColor="var(--highlight-color, #f5ecf9)"
+            borderRadius="0.375rem"
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[0, 1, 2, 3].map((i) => (
+                <OnboardingCourseSkeleton key={i} />
+              ))}
+            </div>
+          </SkeletonTheme>
         </div>
       ) : (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-foreground">
             {t("onboarding.s5.recommended")}
           </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div ref={cardsGridRef} className="grid gap-4 sm:grid-cols-2">
             {recommended.map((course) => (
-              <CourseCard key={course.id} course={course} />
+              <div key={course.id} className="h-full">
+                <CourseCard course={course} />
+              </div>
             ))}
           </div>
           {!roleId && (

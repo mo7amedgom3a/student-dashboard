@@ -366,3 +366,15 @@
     opacity: 1;
   }
 }
+
+/* react-loading-skeleton theme overrides */
+.react-loading-skeleton {
+  --base-color: #e7e4e4;
+  --highlight-color: #f5ecf9;
+}
+
+.dark .react-loading-skeleton {
+  --base-color: #2a2626;
+  --highlight-color: #3f3838;
+}
+
