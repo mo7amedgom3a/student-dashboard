@@ -1,0 +1,368 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   Edify design tokens — "white smoke + purpla" style system.
+   All 7 palettes from the style token file are registered as
+   Tailwind theme colors so utilities like `bg-neon-violet-500`,
+   `text-white-smoke-900`, `border-thistle-300` work everywhere.
+   ============================================================ */
+@theme inline {
+  /* ---- white-smoke (neutral grays, warm-tinted) ---- */
+  --color-white-smoke-50: #f3f2f2;
+  --color-white-smoke-100: #e7e4e4;
+  --color-white-smoke-200: #cecaca;
+  --color-white-smoke-300: #b6afaf;
+  --color-white-smoke-400: #9d9595;
+  --color-white-smoke-500: #857a7a;
+  --color-white-smoke-600: #6a6262;
+  --color-white-smoke-700: #504949;
+  --color-white-smoke-800: #353131;
+  --color-white-smoke-900: #1b1818;
+  --color-white-smoke-950: #131111;
+
+  /* ---- thistle (soft lavender accent) ---- */
+  --color-thistle-50: #f5ecf9;
+  --color-thistle-100: #ebd9f2;
+  --color-thistle-200: #d8b3e6;
+  --color-thistle-300: #c48cd9;
+  --color-thistle-400: #b166cc;
+  --color-thistle-500: #9d40bf;
+  --color-thistle-600: #7e3399;
+  --color-thistle-700: #5e2673;
+  --color-thistle-800: #3f194d;
+  --color-thistle-900: #1f0d26;
+  --color-thistle-950: #16091b;
+
+  /* ---- mauve ---- */
+  --color-mauve-50: #f5eafb;
+  --color-mauve-100: #ecd4f7;
+  --color-mauve-200: #d9aaee;
+  --color-mauve-300: #c57fe6;
+  --color-mauve-400: #b255dd;
+  --color-mauve-500: #9f2ad5;
+  --color-mauve-600: #7f22aa;
+  --color-mauve-700: #5f1980;
+  --color-mauve-800: #401155;
+  --color-mauve-900: #20082b;
+  --color-mauve-950: #16061e;
+
+  /* ---- wisteria ---- */
+  --color-wisteria-50: #f6e9fc;
+  --color-wisteria-100: #ecd3f8;
+  --color-wisteria-200: #daa6f2;
+  --color-wisteria-300: #c77aeb;
+  --color-wisteria-400: #b54ee4;
+  --color-wisteria-500: #a221de;
+  --color-wisteria-600: #821bb1;
+  --color-wisteria-700: #611485;
+  --color-wisteria-800: #410d59;
+  --color-wisteria-900: #20072c;
+  --color-wisteria-950: #17051f;
+
+  /* ---- mauve-magic ---- */
+  --color-mauve-magic-50: #f6e8fc;
+  --color-mauve-magic-100: #edd2f9;
+  --color-mauve-magic-200: #dca4f4;
+  --color-mauve-magic-300: #ca77ee;
+  --color-mauve-magic-400: #b949e9;
+  --color-mauve-magic-500: #a71ce3;
+  --color-mauve-magic-600: #8616b6;
+  --color-mauve-magic-700: #641188;
+  --color-mauve-magic-800: #430b5b;
+  --color-mauve-magic-900: #21062d;
+  --color-mauve-magic-950: #170420;
+
+  /* ---- neon-violet (primary brand — vivid violet, Udemy-adjacent) ---- */
+  --color-neon-violet-50: #f6e8fd;
+  --color-neon-violet-100: #edd1fa;
+  --color-neon-violet-200: #dba2f6;
+  --color-neon-violet-300: #ca74f1;
+  --color-neon-violet-400: #b845ed;
+  --color-neon-violet-500: #a617e8;
+  --color-neon-violet-600: #8512ba;
+  --color-neon-violet-700: #640e8b;
+  --color-neon-violet-800: #42095d;
+  --color-neon-violet-900: #21052e;
+  --color-neon-violet-950: #170320;
+
+  /* ---- hyper-magenta ---- */
+  --color-hyper-magenta-50: #f6e8fd;
+  --color-hyper-magenta-100: #edd0fb;
+  --color-hyper-magenta-200: #dca2f6;
+  --color-hyper-magenta-300: #ca73f2;
+  --color-hyper-magenta-400: #b844ee;
+  --color-hyper-magenta-500: #a616e9;
+  --color-hyper-magenta-600: #8511bb;
+  --color-hyper-magenta-700: #640d8c;
+  --color-hyper-magenta-800: #43095d;
+  --color-hyper-magenta-900: #21042f;
+  --color-hyper-magenta-950: #170321;
+
+  /* ---- semantic tokens (mapped to the palettes above) ---- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-arabic: var(--font-cairo);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand: var(--brand);
+  --color-success-foreground: var(--success-foreground);
+  --color-success: var(--success);
+  --color-gold: var(--gold);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* ===== Brand: neon-violet (vivid violet, Udemy-adjacent #a435f0) =====
+     Primary uses the 500 step for vibrant UI, 600 for AA-safe contrast
+     on white text where needed. */
+  --brand: #a617e8;            /* neon-violet-500 */
+  --brand-foreground: #ffffff;
+  --primary: #a617e8;          /* neon-violet-500 */
+  --primary-foreground: #ffffff;
+
+  /* Accent: thistle (soft lavender) — light tint bg + deep purple text */
+  --accent: #f5ecf9;           /* thistle-50 */
+  --accent-foreground: #5e2673;/* thistle-700 */
+
+  /* Neutrals: white-smoke scale (warm-tinted grays) */
+  --secondary: #e7e4e4;        /* white-smoke-100 */
+  --secondary-foreground: #1b1818; /* white-smoke-900 */
+  --background: #f3f2f2;       /* white-smoke-50 */
+  --foreground: #1b1818;       /* white-smoke-900 */
+  --card: #ffffff;             /* pure white so cards pop on smoke bg */
+  --card-foreground: #1b1818;  /* white-smoke-900 */
+  --popover: #ffffff;
+  --popover-foreground: #1b1818;
+  --muted: #e7e4e4;            /* white-smoke-100 */
+  --muted-foreground: #6a6262; /* white-smoke-600 */
+
+  /* Functional colors (kept for LMS semantics) */
+  --success: #1e7f45;
+  --success-foreground: #ffffff;
+  --gold: #f5c518;
+  --destructive: #b91c1c;
+
+  --border: #cecaca;           /* white-smoke-200 */
+  --input: #cecaca;            /* white-smoke-200 */
+  --ring: #a617e8;             /* neon-violet-500 */
+
+  /* Chart palette draws from the purple family + functional accents */
+  --chart-1: #a617e8;          /* neon-violet-500 */
+  --chart-2: #9d40bf;          /* thistle-500 */
+  --chart-3: #1e7f45;          /* success green */
+  --chart-4: #f5c518;          /* gold */
+  --chart-5: #a616e9;          /* hyper-magenta-500 */
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1b1818;
+  --sidebar-primary: #a617e8;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5ecf9;   /* thistle-50 */
+  --sidebar-accent-foreground: #5e2673; /* thistle-700 */
+  --sidebar-border: #cecaca;   /* white-smoke-200 */
+  --sidebar-ring: #a617e8;
+}
+
+.dark {
+  /* Dark mode: warm near-black neutrals from white-smoke 900/950,
+     brighter neon-violet for the brand. */
+  --brand: #c77aeb;            /* neon-violet-300 — pops on dark */
+  --brand-foreground: #1b1818;
+  --primary: #c77aeb;          /* neon-violet-300 */
+  --primary-foreground: #1b1818;
+  --accent: #3f194d;           /* thistle-800 */
+  --accent-foreground: #d8b3e6;/* thistle-200 */
+  --secondary: #353131;        /* white-smoke-800 */
+  --secondary-foreground: #f3f2f2;
+  --background: #131111;       /* white-smoke-950 */
+  --foreground: #f3f2f2;       /* white-smoke-50 */
+  --card: #1b1818;             /* white-smoke-900 */
+  --card-foreground: #f3f2f2;
+  --popover: #1b1818;
+  --popover-foreground: #f3f2f2;
+  --muted: #353131;            /* white-smoke-800 */
+  --muted-foreground: #b6afaf; /* white-smoke-300 */
+  --success: #22a559;
+  --success-foreground: #ffffff;
+  --gold: #f5c518;
+  --destructive: #ef4444;
+  --border: #504949;           /* white-smoke-700 */
+  --input: #504949;
+  --ring: #c77aeb;             /* neon-violet-300 */
+  --sidebar: #1b1818;
+  --sidebar-foreground: #f3f2f2;
+  --sidebar-primary: #c77aeb;
+  --sidebar-primary-foreground: #1b1818;
+  --sidebar-accent: #353131;
+  --sidebar-accent-foreground: #f3f2f2;
+  --sidebar-border: #504949;
+  --sidebar-ring: #c77aeb;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  /* RTL support */
+  [dir="rtl"] body {
+    font-family: var(--font-cairo), var(--font-inter), sans-serif;
+  }
+  [dir="ltr"] body {
+    font-family: var(--font-inter), sans-serif;
+  }
+}
+
+/* Custom scrollbar for long lists */
+.lms-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted-foreground) transparent;
+}
+.lms-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.lms-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.lms-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--muted-foreground);
+  border-radius: 9999px;
+  opacity: 0.5;
+}
+
+/* Hide horizontal carousel scrollbar but keep functional */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Star rating gold */
+.text-gold {
+  color: var(--gold);
+}
+.bg-gold {
+  background-color: var(--gold);
+}
+
+/* Smooth view transitions */
+.view-enter {
+  animation: viewEnter 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes viewEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[dir="rtl"] .view-enter {
+  animation: viewEnterRtl 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes viewEnterRtl {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide transitions for multi-step flows */
+.slide-enter {
+  animation: slideEnter 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes slideEnter {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+[dir="rtl"] .slide-enter {
+  animation: slideEnterRtl 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes slideEnterRtl {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* AI assistant typing indicator */
+.typing-dot {
+  animation: typingBounce 1.2s infinite ease-in-out;
+}
+.typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes typingBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
