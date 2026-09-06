@@ -987,9 +987,11 @@ function OverviewTab({ course, lesson }: { course: Course; lesson: Lesson }) {
 // Q&A tab
 // ----------------------------------------------------------------------------
 
+const EMPTY_QA: QAItem[] = [];
+
 function QATab({ course }: { course: Course }) {
   const { t, locale, formatDate } = useI18n();
-  const extraQA = useAppStore((s) => s.extraQA[course.id] ?? []) ?? [];
+  const extraQA = useAppStore((s) => s.extraQA[course.id]) ?? EMPTY_QA;
   const addQuestion = useAppStore((s) => s.addQuestion);
   const pushToast = useAppStore((s) => s.pushToast);
   const user = useAppStore((s) => s.user);
@@ -998,7 +1000,10 @@ function QATab({ course }: { course: Course }) {
   const [upvoteBoost, setUpvoteBoost] = useState<Record<string, number>>({});
 
   // Show extra (user-added) questions first, then seed Q&A.
-  const allQA: QAItem[] = [...extraQA, ...course.qa];
+  const allQA: QAItem[] = useMemo(
+    () => [...extraQA, ...(course.qa ?? [])],
+    [extraQA, course.qa]
+  );
 
   const handleSubmit = () => {
     const q = draft.trim();
@@ -1123,6 +1128,8 @@ function QaItem({
 // Notes tab
 // ----------------------------------------------------------------------------
 
+const EMPTY_NOTES: { id: string; text: string; timestampSec: number; createdAt: number }[] = [];
+
 function NotesTab({
   course,
   lesson,
@@ -1136,7 +1143,7 @@ function NotesTab({
   const addNote = useAppStore((s) => s.addNote);
   const pushToast = useAppStore((s) => s.pushToast);
   const notes =
-    useAppStore((s) => s.progress[course.id]?.lessons[lesson.id]?.notes) ?? [];
+    useAppStore((s) => s.progress[course.id]?.lessons[lesson.id]?.notes) ?? EMPTY_NOTES;
 
   const [draft, setDraft] = useState("");
   const [deletedNoteIds, setDeletedNoteIds] = useState<Set<string>>(new Set());
