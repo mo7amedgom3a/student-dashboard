@@ -378,3 +378,32 @@
   --highlight-color: #3f3838;
 }
 
+/* Mastery Academy Logo shimmer animations */
+@keyframes logoShimmer {
+  0% {
+    transform: translateX(-350px);
+  }
+  100% {
+    transform: translateX(350px);
+  }
+}
+.logo-animated .logo-shimmer-rect {
+  animation: logoShimmer 3.5s ease-in-out infinite;
+}
+
+@keyframes textShimmer {
+  0%, 100% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0 0;
+  }
+}
+.text-shimmer {
+  background: linear-gradient(90deg, #FF6555 0%, #FF6555 40%, #FFC9BE 50%, #FF6555 60%, #FF6555 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmer 4s ease-in-out infinite;
+}
+
