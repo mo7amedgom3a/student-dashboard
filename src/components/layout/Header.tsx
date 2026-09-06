@@ -187,7 +187,7 @@ export function Header() {
   return (
     <header className="sticky top-2 sm:top-3 z-50 w-full px-3 sm:px-6 lg:px-8 pointer-events-none transition-all duration-200">
       {/* Contained Floating Island with Glassmorphism */}
-      <div className="mx-auto max-w-7xl h-16 rounded-2xl border border-border/60 dark:border-white/10 bg-background/80 dark:bg-card/75 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/25 supports-[backdrop-filter]:bg-background/65 px-3 sm:px-4 flex items-center justify-between gap-2 sm:gap-4 pointer-events-auto">
+      <div className="mx-auto max-w-7xl h-16 rounded-2xl border border-border/60 dark:border-white/10 bg-background/80 dark:bg-card/75 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/25 supports-[backdrop-filter]:bg-background/65 px-3 sm:px-4 flex items-center gap-2 sm:gap-3 pointer-events-auto">
         
         {/* Mastery Academy Logo Lockup */}
         <button
@@ -199,7 +199,7 @@ export function Header() {
         </button>
 
         {/* Desktop & Tablet Navigation (Adaptive to strictly avoid overflow) */}
-        <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 min-w-0" aria-label="Primary">
+        <nav className="hidden md:flex items-center gap-1 lg:gap-1.5 min-w-0 ms-1 lg:ms-3" aria-label="Primary">
           {/* Primary Core Links */}
           {primaryNavItems.map((item) => {
             const active = item.active;
@@ -352,6 +352,9 @@ export function Header() {
           </div>
         </nav>
 
+        {/* Generous flexible space separating navigation links from utilities */}
+        <div className="flex-1 min-w-[16px] sm:min-w-[28px]" />
+
         {/* Right Toolbar: Actions, Switcher, Wishlist, Cart & Profile */}
         <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           
@@ -489,23 +492,20 @@ export function Header() {
             )}
           </Button>
 
-          {/* User Profile or Sign In */}
+          {/* User Profile (Avatar only) */}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="h-9 gap-2 ps-1 pe-2 rounded-xl hover:bg-accent/60 transition-all"
+                  size="icon"
+                  className="h-9 w-9 p-0 rounded-xl hover:bg-accent/60 transition-all flex items-center justify-center"
+                  aria-label={user.name}
+                  title={user.name}
                 >
                   <div className="w-7 h-7 rounded-lg bg-primary/15 text-primary flex items-center justify-center text-xs font-bold ring-1 ring-primary/25">
                     {user.name.charAt(0).toUpperCase()}
                   </div>
-                  {!isMobile && (
-                    <span className="text-xs font-semibold max-w-[100px] truncate text-foreground/90">
-                      {user.name}
-                    </span>
-                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -519,6 +519,9 @@ export function Header() {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("profile")} className="rounded-lg cursor-pointer">
+                  <User className="w-4 h-4 me-2 text-primary" /> {locale === "ar" ? "الملف الشخصي" : "Student Profile"}
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("my-learning")} className="rounded-lg cursor-pointer">
                   <GraduationCap className="w-4 h-4 me-2 text-primary" /> {t("nav.myLearning")}
                 </DropdownMenuItem>
@@ -572,6 +575,9 @@ export function Header() {
                   {t("brand.name")}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate("profile")} className="gap-2.5 py-2 rounded-lg cursor-pointer">
+                  <User className="w-4 h-4 text-primary" /> {locale === "ar" ? "الملف الشخصي" : "Student Profile"}
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("my-learning")} className="gap-2.5 py-2 rounded-lg cursor-pointer">
                   <GraduationCap className="w-4 h-4 text-primary" /> {t("nav.myLearning")}
                 </DropdownMenuItem>

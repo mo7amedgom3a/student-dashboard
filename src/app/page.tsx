@@ -23,6 +23,7 @@ import { AiCoachScreen } from "@/components/screens/AiCoachScreen";
 import { ConsultationsScreen } from "@/components/screens/ConsultationsScreen";
 import { MyPlanScreen } from "@/components/screens/MyPlanScreen";
 import { CertificationsScreen } from "@/components/screens/CertificationsScreen";
+import { ProfileScreen } from "@/components/screens/ProfileScreen";
 import type { RouteName } from "@/lib/types";
 
 const SCREENS: Record<RouteName, () => JSX.Element> = {
@@ -43,6 +44,7 @@ const SCREENS: Record<RouteName, () => JSX.Element> = {
   consultations: ConsultationsScreen,
   "my-plan": MyPlanScreen,
   certifications: CertificationsScreen,
+  profile: ProfileScreen,
 };
 
 export default function Home() {

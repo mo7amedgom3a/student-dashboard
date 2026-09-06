@@ -52,6 +52,7 @@ interface AppState {
   signUp: (name: string, email: string) => void;
   logIn: (email: string) => void;
   loginAsDemo: () => void;
+  updateUser: (patch: Partial<User>) => void;
   logOut: () => void;
 
   // --- onboarding
@@ -290,6 +291,11 @@ export const useAppStore = create<AppState>((set, get) => ({
       savedPlans: [initialDemoPlan],
       activePlanId: initialDemoPlan.id,
     });
+  },
+  updateUser: (patch) => {
+    set((s) => ({
+      user: s.user ? { ...s.user, ...patch } : null,
+    }));
   },
   logOut: () => {
     set({

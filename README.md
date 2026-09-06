@@ -503,6 +503,7 @@ Particle celebration triggered upon:
 | **Quiz Assessment** | `quiz` | Immersive question stepper, multiple-choice radio cards, countdown timer, pass/fail celebration screen. |
 | **Cart & Checkout** | `cart` / `checkout` | Order summary, promo voucher applicator, payment card selectors, secure checkout trigger. |
 | **Checkout Success** | `checkout-confirmation`| Order receipt card, confetti animation, and immediate "Start Learning Now" button. |
+| **Student Profile** | `profile` | Personalized student hero, current skills, gap skills analysis, target field switch, and onboarding preferences summary. |
 | **Auth & Onboarding**| `auth` / `onboarding` | Dual-panel brand hero, demo quick-login, multi-step role selection, and career goal questionnaire. |
 
 ---

@@ -196,7 +196,8 @@ export type RouteName =
   | "ai-coach"
   | "consultations"
   | "my-plan"
-  | "certifications";
+  | "certifications"
+  | "profile";
 
 export interface Route {
   name: RouteName;
