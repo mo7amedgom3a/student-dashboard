@@ -38,8 +38,13 @@ import {
  * Reads `instructorId` from the SPA store route params. Falls back to
  * EmptyState when the instructor isn't found.
  */
-export function InstructorProfileScreen() {
-  const instructorId = useAppStore((s) => s.route.params?.instructorId);
+export interface InstructorProfileScreenProps {
+  instructorId?: string;
+}
+
+export function InstructorProfileScreen({ instructorId: propInstructorId }: InstructorProfileScreenProps = {}) {
+  const storeInstructorId = useAppStore((s) => s.route.params?.instructorId);
+  const instructorId = propInstructorId ?? storeInstructorId;
   const instructor = instructorId ? getInstructor(instructorId) : undefined;
 
   if (!instructor) {

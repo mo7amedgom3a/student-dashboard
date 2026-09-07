@@ -49,7 +49,11 @@ import { cn } from "@/lib/utils";
 type TabValue = "in-progress" | "saved" | "certificates";
 type FilterStatus = "all" | "in-progress" | "completed";
 
-export function MyLearningScreen() {
+export interface MyLearningScreenProps {
+  initialTab?: TabValue;
+}
+
+export function MyLearningScreen({ initialTab }: MyLearningScreenProps = {}) {
   const { t, locale, formatPrice, formatDate, formatNumber, isRTL } = useI18n();
   const navigate = useAppStore((s) => s.navigate);
   const route = useAppStore((s) => s.route);
@@ -64,22 +68,23 @@ export function MyLearningScreen() {
   const user = useAppStore((s) => s.user);
 
   // Controlled tab (supporting direct navigation to saved or certificates)
-  const routeTab = route.params?.tab as TabValue | undefined;
+  const routeTab = (initialTab ?? route.params?.tab) as TabValue | undefined;
   const [tab, setTab] = useState<TabValue>(
     routeTab === "saved" || routeTab === "certificates" ? routeTab : "in-progress"
   );
   const [viewingCert, setViewingCert] = useState<Certificate | null>(null);
 
   useEffect(() => {
+    const targetTab = initialTab ?? (route.params?.tab as TabValue | undefined);
     if (
-      route.params?.tab &&
-      (route.params.tab === "in-progress" ||
-        route.params.tab === "saved" ||
-        route.params.tab === "certificates")
+      targetTab &&
+      (targetTab === "in-progress" ||
+        targetTab === "saved" ||
+        targetTab === "certificates")
     ) {
-      setTab(route.params.tab as TabValue);
+      setTab(targetTab);
     }
-  }, [route.params?.tab]);
+  }, [initialTab, route.params?.tab]);
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState("");

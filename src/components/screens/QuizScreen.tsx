@@ -89,10 +89,14 @@ function localizeQuizTitle(q: Quiz, locale: Locale): string {
 
 // ---------------- QuizScreen ----------------
 
-export function QuizScreen() {
+export interface QuizScreenProps {
+  courseId?: string;
+}
+
+export function QuizScreen({ courseId: propCourseId }: QuizScreenProps = {}) {
   const { t, locale } = useI18n();
   const route = useAppStore((s) => s.route);
-  const courseId = route.params?.courseId ?? "";
+  const courseId = propCourseId ?? route.params?.courseId ?? "";
   const quizState = useAppStore((s) => s.quizState);
   const startQuiz = useAppStore((s) => s.startQuiz);
   const navigate = useAppStore((s) => s.navigate);

@@ -45,14 +45,18 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  *   - logIn(email)         → home (with seeded demo progress)
  *   - loginAsDemo()        → home (pre-seeded enrolled + saved + progress)
  */
-export function AuthScreen() {
+export interface AuthScreenProps {
+  initialTab?: "signup" | "login";
+}
+
+export function AuthScreen({ initialTab = "signup" }: AuthScreenProps = {}) {
   const { t, locale } = useI18n();
   const signUp = useAppStore((s) => s.signUp);
   const logIn = useAppStore((s) => s.logIn);
   const loginAsDemo = useAppStore((s) => s.loginAsDemo);
   const setLocale = useAppStore((s) => s.setLocale);
 
-  const [tab, setTab] = useState<AuthTab>("signup");
+  const [tab, setTab] = useState<AuthTab>(initialTab);
 
   // Form fields (shared across tabs — only the ones relevant to each tab are
   // validated and submitted).
@@ -96,9 +100,16 @@ export function AuthScreen() {
   };
 
   const handleTabChange = (value: string) => {
-    setTab(value as AuthTab);
+    const nextTab = value as AuthTab;
+    setTab(nextTab);
     // Clear field errors when switching tabs so stale messages don't linger.
     setErrors({});
+    if (typeof window !== "undefined") {
+      const nextPath = nextTab === "login" ? "/login" : "/signup";
+      if (window.location.pathname === "/login" || window.location.pathname === "/signup") {
+        window.history.replaceState(null, "", nextPath);
+      }
+    }
   };
 
   const trustItems = useMemo(

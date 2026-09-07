@@ -190,8 +190,13 @@ const RESOURCE_ICON: Record<"pdf" | "zip" | "slides", LucideIcon> = {
  * curriculum sidebar on the right. Mobile collapses to a single column with
  * the curriculum in a Sheet and the AI assistant in a Sheet/floating button.
  */
-export function CoursePlayerScreen() {
-  const courseId = useAppStore((s) => s.route.params?.courseId) ?? "";
+export interface CoursePlayerScreenProps {
+  courseId?: string;
+}
+
+export function CoursePlayerScreen({ courseId: propCourseId }: CoursePlayerScreenProps = {}) {
+  const storeCourseId = useAppStore((s) => s.route.params?.courseId);
+  const courseId = propCourseId ?? storeCourseId ?? "";
   const course = useMemo(() => getCourse(courseId), [courseId]);
 
   if (!course) {

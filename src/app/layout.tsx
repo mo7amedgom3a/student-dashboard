@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Inter, Cairo } from "next/font/google";
 import "./globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "@/components/ui/sonner";
+import { DirSync } from "@/components/shared/DirSync";
+import { ConfettiOverlay } from "@/components/shared/ConfettiOverlay";
+import { ToastViewport } from "@/components/shared/ToastViewport";
+import { NavigationSync } from "@/components/shared/NavigationSync";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -59,6 +64,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${cairo.variable} antialiased bg-background text-foreground min-h-screen`}
       >
+        <DirSync />
+        <ConfettiOverlay />
+        <ToastViewport />
+        <Suspense fallback={null}>
+          <NavigationSync />
+        </Suspense>
         {children}
         <Toaster />
         <SonnerToaster position="top-center" richColors />

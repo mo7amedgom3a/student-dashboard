@@ -14,6 +14,7 @@ import type {
   SavedPlan,
 } from "@/lib/types";
 import { courses, getCourse, getAllLessons, roles, demoScheduledConsultations } from "@/lib/mock-data";
+import { getAppRouter, routeToPath } from "@/lib/routes";
 
 /**
  * Edify app store — single source of truth for the MVP prototype.
@@ -194,26 +195,42 @@ export const useAppStore = create<AppState>((set, get) => ({
   setDialect: (d) => set({ dialect: d }),
 
   // ---------- routing
-  route: { name: "auth" },
+  route: { name: "home" },
   history: [],
   navigate: (name, params) => {
     set((s) => ({
       route: { name, params },
       history: [...s.history, s.route],
     }));
+    const targetPath = routeToPath(name, params);
+    const router = getAppRouter();
+    if (router) {
+      router.push(targetPath);
+    } else if (typeof window !== "undefined" && window.location.pathname !== targetPath) {
+      window.history.pushState(null, "", targetPath);
+    }
     // scroll to top on view change
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   },
   goBack: () => {
+    const router = getAppRouter();
     const hist = get().history;
+    if (router && typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+      return;
+    }
     if (hist.length === 0) {
-      set({ route: { name: "home" } });
+      get().navigate("home");
       return;
     }
     const prev = hist[hist.length - 1];
     set({ route: prev, history: hist.slice(0, -1) });
+    const targetPath = routeToPath(prev.name, prev.params);
+    if (router) {
+      router.push(targetPath);
+    }
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -231,6 +248,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       onboardingComplete: false,
       onboardingAnswers: { skillIds: [] },
     });
+    getAppRouter()?.push("/onboarding");
   },
   logIn: (email) => {
     userSeq += 1;
@@ -254,6 +272,7 @@ export const useAppStore = create<AppState>((set, get) => ({
         : [...get().enrolledCourseIds, "c-html-css"],
       progress: demoProgress,
     });
+    getAppRouter()?.push("/");
   },
   loginAsDemo: () => {
     userSeq += 1;
@@ -291,6 +310,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       savedPlans: [initialDemoPlan],
       activePlanId: initialDemoPlan.id,
     });
+    getAppRouter()?.push("/");
   },
   updateUser: (patch) => {
     set((s) => ({
@@ -314,6 +334,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       savedPlans: [],
       activePlanId: null,
     });
+    getAppRouter()?.push("/login");
   },
 
   // ---------- onboarding
@@ -339,6 +360,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       }
     }
     set({ onboardingComplete: true, route: { name: "home" }, history: [] });
+    getAppRouter()?.push("/");
   },
   resetOnboarding: () =>
     set({ onboardingStep: 0, onboardingComplete: false, onboardingAnswers: { skillIds: [] } }),

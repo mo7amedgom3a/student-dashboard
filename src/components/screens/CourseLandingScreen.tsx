@@ -63,8 +63,13 @@ const RATING_BREAKDOWN: { stars: number; pct: number }[] = [
  * layout on desktop (main content + sticky right rail) and a single column
  * on mobile with a sticky bottom CTA bar.
  */
-export function CourseLandingScreen() {
-  const courseId = useAppStore((s) => s.route.params?.courseId);
+export interface CourseLandingScreenProps {
+  courseId?: string;
+}
+
+export function CourseLandingScreen({ courseId: propCourseId }: CourseLandingScreenProps = {}) {
+  const storeCourseId = useAppStore((s) => s.route.params?.courseId);
+  const courseId = propCourseId ?? storeCourseId;
   const course = courseId ? getCourse(courseId) : undefined;
 
   if (!course) {

@@ -18,14 +18,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export function CheckoutConfirmationScreen() {
+export interface CheckoutConfirmationScreenProps {
+  orderId?: string;
+  amount?: string;
+}
+
+export function CheckoutConfirmationScreen({
+  orderId: propOrderId,
+  amount: propAmount,
+}: CheckoutConfirmationScreenProps = {}) {
   const { t, locale, isRTL, formatPrice } = useI18n();
   const route = useAppStore((s) => s.route);
   const navigate = useAppStore((s) => s.navigate);
   const enrolledCourseIds = useAppStore((s) => s.enrolledCourseIds);
 
-  const orderId = route.params?.orderId ?? "—";
-  const amount = route.params?.amount ?? "0";
+  const orderId = propOrderId ?? route.params?.orderId ?? "—";
+  const amount = propAmount ?? route.params?.amount ?? "0";
 
   // Fire confetti once on mount. `fireConfetti()` is a Zustand action (not a
   // React setState), so calling it inside a useEffect is safe and does not
