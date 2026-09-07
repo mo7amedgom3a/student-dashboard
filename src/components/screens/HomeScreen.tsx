@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ComponentType } from "react";
+import { useEffect, useMemo, useState, type ComponentType, type ReactNode } from "react";
 import { useAppStore } from "@/lib/store";
 import { useI18n } from "@/hooks/use-i18n";
 import {
@@ -121,7 +121,43 @@ export function HomeScreen() {
     return <HomeSkeleton />;
   }
 
-  const greeting = user ? t("home.greeting", { name: user.name }) : t("brand.tagline");
+  let greetingContent: ReactNode;
+  if (user) {
+    const rawGreeting = t("home.greeting", { name: "%%NAME%%" });
+    if (rawGreeting.includes("%%NAME%%")) {
+      const [prefix, suffix] = rawGreeting.split("%%NAME%%");
+      greetingContent = (
+        <>
+          {prefix}
+          <span>{user.name}</span>
+          <span
+            className="inline-block animate-wave-hand ms-2 select-none"
+            role="img"
+            aria-label="waving hand"
+          >
+            👋
+          </span>
+          {suffix}
+        </>
+      );
+    } else {
+      greetingContent = (
+        <>
+          {t("home.greeting", { name: user.name })}
+          <span
+            className="inline-block animate-wave-hand ms-2 select-none"
+            role="img"
+            aria-label="waving hand"
+          >
+            👋
+          </span>
+        </>
+      );
+    }
+  } else {
+    greetingContent = t("brand.tagline");
+  }
+
   const greetingSub = user ? t("home.greetingSub") : "";
   const ViewAllIcon = isRTL ? ArrowLeft : ArrowRight;
 
@@ -130,7 +166,7 @@ export function HomeScreen() {
       {/* Hero greeting */}
       <header className="space-y-1">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-          {greeting}
+          {greetingContent}
         </h1>
         {greetingSub && (
           <p className="text-sm sm:text-base text-muted-foreground">{greetingSub}</p>
